@@ -117,7 +117,7 @@ tr:last-child td{border-bottom:none}
     <div class="badge" id="asof"></div>
   </div>
 
-  <div class="sec-title" id="vksec">Вклады · отдельный карман, в итоги ИИС и акций не входит</div>
+  <div class="sec-title" id="vksec">Вклады · весь портфель</div>
   <div id="vkwrap"></div>
 
   <div class="foot" id="foot"></div>
@@ -142,11 +142,6 @@ function el(html){ const t=document.createElement("template"); t.innerHTML=html.
 
 const VT=(DATA.vklady&&DATA.vklady.totals)||{};
 
-// 22.10.2026, по решению владельца: страница публичная, поэтому на ней остаётся
-// ТОЛЬКО таблица вкладов. Графики (донат, P&L, лесенка), KPI-карточки, таблица
-// позиций, купоны, акции и алерты из шаблона вырезаны — алерты и итоги приходят
-// в телеграм-пост, а полный дайджест лежит локально в reports\.
-
 // ---- subtitle / asof
 document.getElementById("sub").textContent =
   "депозиты · "+(VT.count||0)+" в работе · ср. ставка "+f1(VT.wrate)+"%";
@@ -156,7 +151,6 @@ document.getElementById("asof").textContent = "обновлено "+DATA.generat
 (function(){
   const V=DATA.vklady, wrap=document.getElementById("vkwrap"), sec=document.getElementById("vksec");
   if(!V || !V.rows || !V.rows.length){ sec.style.display="none"; wrap.style.display="none"; return; }
-  sec.textContent="Вклады · весь портфель";
   const VT=V.totals||{};
   // ставка бывает и с сотыми (13,61%) — молча округлять её до десятых нельзя
   const frate=n=>(n==null?"—":(Math.round(n*10)/10===n? f1(n):f2(n))+"%");
