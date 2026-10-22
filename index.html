@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<meta name="robots" content="noindex,nofollow,noarchive"/>
+<meta name="referrer" content="no-referrer"/>
+<title>Портфель-дозор</title>
+<style>
+:root{
+  --bg:#0b1020; --card:#121a36; --card2:#0f1730; --line:#1e2b50;
+  --txt:#e8edff; --mut:#8a97c2; --mut2:#5d6a96;
+  --up:#3fb950; --down:#f85149; --accent:#f5a524; --teal:#34d3c2;
+}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:'Segoe UI',system-ui,Arial,sans-serif;-webkit-text-size-adjust:100%}
+body{overflow-x:hidden}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 40px}
+a{color:var(--teal)}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.title{font-size:26px;font-weight:800;letter-spacing:.3px}
+.title .dot{color:var(--accent)}
+.sub{color:var(--mut);font-size:13px;margin-top:4px}
+.badge{font-size:12px;color:var(--mut);background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:6px 12px}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(4,1fr)}
+.two{grid-template-columns:1.05fr .95fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden}
+.card h3{margin:0 0 2px;font-size:14px;font-weight:700}
+.card .cap{color:var(--mut2);font-size:12px;margin-bottom:12px}
+.kpi .lbl{color:var(--mut);font-size:12.5px}
+.kpi .big{font-size:30px;font-weight:800;margin-top:6px;line-height:1.05}
+.kpi .big small{font-size:14px;font-weight:600;color:var(--mut2)}
+.kpi .sub2{font-size:12.5px;color:var(--mut2);margin-top:6px}
+.kpi .stripe{position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px}
+.pos{color:var(--up)} .neg{color:var(--down)}
+.rowbars{display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:132px 1fr 96px;align-items:center;gap:10px;font-size:12.5px}
+.bar .nm{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .track{background:var(--card2);border-radius:7px;height:20px;position:relative;overflow:hidden}
+.bar .fill{position:absolute;top:0;bottom:0;border-radius:7px}
+.bar .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.legend{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.legend .li{display:grid;grid-template-columns:12px 1fr auto auto;align-items:center;gap:9px;font-size:12.5px}
+.legend .sw{width:11px;height:11px;border-radius:3px}
+.legend .lp{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.legend .lv{color:var(--mut2);font-variant-numeric:tabular-nums}
+.legend .lpct{font-weight:700;font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:9px 8px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+th{color:var(--mut2);font-weight:600;border-bottom:1px solid var(--line);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+td{border-bottom:1px solid rgba(30,43,80,.5)}
+th.l,td.l{text-align:left}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:7px;vertical-align:middle}
+.muted{color:var(--mut)}
+.reinvest{border:1px solid #3a3016;background:linear-gradient(180deg,#1c1710,#141021)}
+.reinvest .amt{font-size:26px;font-weight:800;color:var(--accent)}
+.clist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.clist .ci{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;font-size:12.5px;
+  padding:8px 10px;background:var(--card2);border-radius:9px}
+.clist .cd{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+.clist .cc{font-weight:700;font-variant-numeric:tabular-nums}
+.ev{display:flex;gap:10px;align-items:baseline;font-size:13px;padding:7px 0;border-bottom:1px solid rgba(30,43,80,.5)}
+.ev:last-child{border-bottom:none}
+.ev .d{color:var(--accent);font-weight:700;white-space:nowrap;flex:0 0 auto}
+.alert{border:1px solid #5a1e1e;background:linear-gradient(180deg,#241014,#141021)}
+.alert .a{font-size:13px;padding:4px 0;color:#ffb4b4}
+.wcard{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;margin-bottom:10px}
+.wcard:last-child{margin-bottom:0}
+.whead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:14px}
+.wname{font-weight:700}
+.wtick{color:var(--mut2);font-size:11px;margin-left:6px}
+.wprice{font-weight:700;font-variant-numeric:tabular-nums}
+.wday{font-size:11.5px;margin-left:8px;font-variant-numeric:tabular-nums}
+.bs{display:flex;gap:26px;align-items:flex-end;margin-top:14px;padding:0 4px}
+.bscol{display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 0 auto}
+.bsbar{width:64px;border-radius:7px 7px 2px 2px;opacity:.92}
+.bsval{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.bslbl{font-size:10.5px;color:var(--mut2)}
+.bsdelta{font-size:14px;font-weight:800;margin-left:6px;align-self:center;font-variant-numeric:tabular-nums;line-height:1.35}
+.bsdelta span{font-size:11.5px;font-weight:700}
+.grandrow{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:baseline}
+.grandrow .gr{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--mut)}
+.grandrow .gr b{color:var(--txt);font-variant-numeric:tabular-nums;font-weight:700}
+.grandrow .gr b.pos{color:var(--up)} .grandrow .gr b.neg{color:var(--down)}
+.sec-title{font-size:12px;color:var(--mut2);text-transform:uppercase;letter-spacing:.6px;margin:26px 2px 10px}
+.foot{color:var(--mut2);font-size:11.5px;margin-top:26px;text-align:center;line-height:1.7}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* вклады: одна строка — один вклад; итоги и ср. ставка в подвале таблицы */
+.vktbl th,.vktbl td{padding:6px 7px}
+.vktbl .bank{font-weight:700}
+.vktbl .sub{color:var(--mut2);font-size:11px;margin-left:6px}
+.vktbl tbody tr.dim td{color:var(--mut)}
+.vktbl tfoot td{border-top:1px solid #2a3a63;font-weight:700;padding-top:9px}
+.vktbl tfoot tr+tr td{border-top:none;padding-top:2px;font-weight:600;color:var(--mut)}
+.warn{color:var(--accent)}
+.vktbl .teal{color:var(--teal)}
+@media(max-width:860px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .two{grid-template-columns:1fr}
+  .bar{grid-template-columns:112px 1fr 84px}
+  .title{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div>
+      <div class="title">Портфель<span class="dot">·</span>дозор</div>
+      <div class="sub" id="sub"></div>
+    </div>
+    <div class="badge" id="asof"></div>
+  </div>
+
+  <div class="sec-title" id="vksec">Вклады · отдельный карман, в итоги ИИС и акций не входит</div>
+  <div id="vkwrap"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const DATA = {"generated":"22.10.2026 12:52","vklady":{"rows":[{"bank":"ВТБ","title":"Вклад 13,5%","no_total":false,"name":"ВТБ «Вклад 13,5%»","rate":13.5,"rate_note":null,"principal":400000,"payout_est":417753,"balance_now":null,"income":17753,"income_pct":4.43825,"pay_mode":"% в конце срока","opened":"2026-07-27","opened_disp":"27.07.2026","maturity":"2026-11-24","maturity_disp":"24.11.2026","term_days":120,"elapsed_days":87,"progress_pct":72.5,"irr":0.14120738711375733,"days_left":33,"demand":false,"status":"✅ идёт","prolong":false},{"bank":"ВТБ","title":"Вклад 13,4%","no_total":false,"name":"ВТБ «Вклад 13,4%»","rate":13.4,"rate_note":null,"principal":400000,"payout_est":426580,"balance_now":null,"income":26580,"income_pct":6.645,"pay_mode":"% в конце срока","opened":"2026-08-21","opened_disp":"21.08.2026","maturity":"2027-02-18","maturity_disp":"18.02.2027","term_days":181,"elapsed_days":62,"progress_pct":34.25414364640884,"irr":0.1385290050380863,"days_left":119,"demand":false,"status":"✅ идёт","prolong":false},{"bank":"МКБ","title":"Вклад 13%","no_total":false,"name":"МКБ «Вклад 13%»","rate":13.0,"rate_note":null,"principal":300000,"payout_est":319767,"balance_now":null,"income":19767,"income_pct":6.589,"pay_mode":"% в конце срока","opened":"2026-09-13","opened_disp":"13.09.2026","maturity":"2027-03-17","maturity_disp":"17.03.2027","term_days":185,"elapsed_days":39,"progress_pct":21.08108108108108,"irr":0.13416382731557813,"days_left":146,"demand":false,"status":"✅ идёт","prolong":false}],"totals":{"principal":1100000.0,"payout_est":1164100.0,"income":64100.0,"demand_now":0.0,"count":3,"wrate":13.327272727272728,"irr":0.13789829362939338,"apart_now":0.0},"nearest":{"name":"ВТБ «Вклад 13,5%»","maturity":"2026-11-24","maturity_disp":"24.11.2026","days_left":33,"payout_est":417753}}};
+const NB=" "; // узкий неразрывный пробел
+const MON=["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+function fi(n){ if(n===null||n===undefined||isNaN(n)) return "—";
+  n=Math.round(n); let neg=n<0; let s=Math.abs(n).toString(), o="";
+  for(let i=0;i<s.length;i++){ if(i>0&&(s.length-i)%3===0)o+=NB; o+=s[i]; }
+  return (neg?"−":"")+o; }
+function f1(n){ if(n===null||n===undefined||isNaN(n)) return "—";
+  return (n<0?"−":"")+Math.abs(n).toFixed(1).replace(".",","); }
+function f2(n){ if(n===null||n===undefined||isNaN(n)) return "—";
+  return (n<0?"−":"")+Math.abs(n).toFixed(2).replace(".",","); }
+function dlab(iso){ if(!iso) return "—"; const [y,m,d]=iso.split("-"); return d+NB+MON[+m-1]; }
+function dfull(iso){ if(!iso) return "—"; const [y,m,d]=iso.split("-"); return d+"."+m+"."+y; }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function el(html){ const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstChild; }
+
+const VT=(DATA.vklady&&DATA.vklady.totals)||{};
+
+// 22.10.2026, по решению владельца: страница публичная, поэтому на ней остаётся
+// ТОЛЬКО таблица вкладов. Графики (донат, P&L, лесенка), KPI-карточки, таблица
+// позиций, купоны, акции и алерты из шаблона вырезаны — алерты и итоги приходят
+// в телеграм-пост, а полный дайджест лежит локально в reports\.
+
+// ---- subtitle / asof
+document.getElementById("sub").textContent =
+  "депозиты · "+(VT.count||0)+" в работе · ср. ставка "+f1(VT.wrate)+"%";
+document.getElementById("asof").textContent = "обновлено "+DATA.generated;
+
+// ---- вклады: строка = вклад (банк, ставка, сумма, срок, сколько будет в конце)
+(function(){
+  const V=DATA.vklady, wrap=document.getElementById("vkwrap"), sec=document.getElementById("vksec");
+  if(!V || !V.rows || !V.rows.length){ sec.style.display="none"; wrap.style.display="none"; return; }
+  sec.textContent="Вклады · весь портфель";
+  const VT=V.totals||{};
+  // ставка бывает и с сотыми (13,61%) — молча округлять её до десятых нельзя
+  const frate=n=>(n==null?"—":(Math.round(n*10)/10===n? f1(n):f2(n))+"%");
+  const mode=r=>{
+    const m=(r.pay_mode||"").replace("% ежемесячно на вклад","мес.").replace("% в конце срока","конец");
+    return m || (r.demand?"свободно":"—");
+  };
+  const term=V.rows.filter(r=>!r.demand).sort((a,b)=>(a.maturity||"")<(b.maturity||"")?-1:1);
+  const dem=V.rows.filter(r=>r.demand);
+
+  function row(r){
+    const dl=r.days_left;
+    let cls="", left="—";
+    if(!r.demand){
+      left=(dl<0)? ("−"+(-dl)) : dl;          // «Ост., дн»: минус = срок прошёл
+      cls=(dl<0)?"neg":(dl<=14?"warn":"");
+    }
+    const end=r.demand? r.balance_now : r.payout_est;
+    const inc=r.income||0, ic=inc>=0?"pos":"neg", is=inc>=0?"+":"−";
+    return '<tr'+(r.demand?' class="dim"':'')+'>'+
+      '<td class="l"><span class="bank">'+esc(r.bank||"—")+'</span>'+
+        (r.demand?'<span class="sub">'+esc(r.title||"")+'</span>':'')+
+        (r.no_total?'<span class="sub">· вне Σ</span>':'')+'</td>'+
+      '<td>'+(r.rate!=null? frate(r.rate) : esc(r.rate_note||"—"))+'</td>'+
+      '<td class="teal">'+(r.irr!=null? f1(r.irr*100)+"%" : "—")+'</td>'+
+      '<td>'+fi(r.principal)+'</td>'+
+      '<td><b>'+fi(end)+'</b></td>'+
+      '<td class="'+(inc?ic:"")+'">'+(inc? is+fi(Math.abs(inc))+
+        (r.income_pct!=null?' ('+is+f1(Math.abs(r.income_pct))+'%)':'') : "—")+'</td>'+
+      '<td>'+(r.opened_disp||"—")+'</td>'+
+      '<td>'+(r.maturity_disp||"—")+'</td>'+
+      '<td>'+(r.term_days||"—")+'</td>'+
+      '<td class="'+cls+'">'+left+'</td>'+
+      '<td class="l muted">'+esc(mode(r))+'</td></tr>';
+  }
+
+  const c=el('<div class="card" style="padding:8px 10px"></div>');
+  const tb=el('<table class="vktbl"></table>');
+  tb.innerHTML='<thead><tr><th class="l">Банк</th><th>Ставка</th><th>IRR</th><th>Сумма, ₽</th>'+
+    '<th>В конце, ₽</th><th>Доход, ₽</th><th>Открыт</th><th>Окончание</th><th>Срок, дн</th>'+
+    '<th>Ост., дн</th><th class="l">Выплата</th></tr></thead><tbody></tbody><tfoot></tfoot>';
+  tb.querySelector("tbody").innerHTML=term.concat(dem).map(row).join("");
+
+  const ti=VT.income||0, ts=ti>=0?"+":"−";
+  const nr=V.nearest||{};
+  let ft='<tr><td class="l">Σ вклады'+(VT.count?" ("+VT.count+" срочных)":"")+'</td>'+
+    '<td>'+frate(VT.wrate)+'</td>'+
+    '<td class="teal">'+(VT.irr!=null? f1(VT.irr*100)+"%" : "—")+'</td>'+
+    '<td>'+fi(VT.principal)+'</td><td>'+fi(VT.payout_est)+'</td>'+
+    '<td class="'+(ti>=0?"pos":"neg")+'">'+ts+fi(Math.abs(ti))+
+      (VT.principal? ' ('+ts+f1(Math.abs(ti/VT.principal*100))+'%)':'')+'</td>'+
+    '<td colspan="3" class="muted" style="text-align:right">ближайшее окончание</td>'+
+    '<td colspan="2" class="l">'+(nr.maturity_disp||"—")+
+      (nr.days_left!=null? ' <span class="muted">· '+nr.days_left+' дн</span>':'')+'</td></tr>';
+  if(VT.demand_now) ft+='<tr><td class="l">+ подушка до востребования</td><td>—</td><td>—</td>'+
+    '<td>'+fi(VT.demand_now)+'</td><td>'+fi(VT.demand_now)+'</td>'+
+    '<td colspan="6"></td></tr>';
+  // фонд денежного рынка стоит рядом, но в Σ не входит: риск не как у вклада
+  if(VT.apart_now) ft+='<tr><td class="l">вне Σ · денежный рынок</td><td>—</td><td>—</td>'+
+    '<td>'+fi(VT.apart_now)+'</td><td>'+fi(VT.apart_now)+'</td>'+
+    '<td colspan="6" class="l">другой риск — с вкладами не складываем</td></tr>';
+  tb.querySelector("tfoot").innerHTML=ft;
+
+  c.appendChild(el('<div class="scroll"></div>')).appendChild(tb);
+  c.appendChild(el('<div class="cap" style="margin:8px 2px 2px">IRR — эффективная годовая '+
+    'доходность вклада (вложено → выплата, с учётом срока и капитализации); ставка — '+
+    'номинальная банковская. Итоговый IRR — XIRR по всем срочным вкладам разом.</div>'));
+  wrap.appendChild(c);
+})();
+
+// ---- footer
+document.getElementById("foot").innerHTML =
+  "IRR вклада — эффективная годовая доходность (XIRR: вложено → выплата), ставка — номинальная банковская.<br>"+
+  "Личный дашборд портфеля. Сформировано агентом «Портфель-дозор» · "+DATA.generated+".";
+</script>
+</body>
+</html>
